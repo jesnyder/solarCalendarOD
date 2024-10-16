@@ -4,18 +4,13 @@ DEFAULT_GOAL:  pythonanalysis
 # chmod +x filename 
 .PHONY: getreqs
 getreqs:
-	#pip install --upgrade -r reqs.txt
-	#cd user_provided/kubios
-	#git pull 
-	#cd ../..
-	#ls
+	pip install --upgrade -r reqs.txt
 
 
 # analyze the dataset
 .PHONY: pythonanalysis
 pythonanalysis: getreqs
 	python3  code/python/main.py
-
 
 # serve the local directory
 .PHONY: web

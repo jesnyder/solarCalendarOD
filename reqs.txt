@@ -1,9 +1,6 @@
-biosppy
-hrv-analysis #https://pypi.org/project/hrv-analysis/
 flake8
 markdown
 matplotlib
+meteostat
 numpy
 pandas
-pyhrv
-scipy
