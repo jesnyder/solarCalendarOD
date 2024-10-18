@@ -36,7 +36,7 @@ def write_openscad():
 
     src_fil = os.path.join("code", "openscad", "mobile.scad")
     src_fil = os.path.join("mobile.scad")
-    
+
     f = open(src_fil, "r")
     lines = f.readlines()
     f.close()
@@ -63,14 +63,14 @@ def write_openscad():
                 noon = df.loc[i, "noon"]
                 day = df.loc[i, "day"]
                 month = df.loc[i, "month"]
-                precipi = df.loc[i, "precipi"]
-                tempi = df.loc[i, "tempi"]
+                precipi = df.loc[i, "avg_precipi"]
+                tempi = df.loc[i, "avg_tempi"]
 
 
                 temp = "\n// " + str(time) + " \n"
                 dst.append(temp)
 
-                temp = "// Temperature = " + str(df.loc[i, "temp"]) + " | i = " + str(df.loc[i, "tempi"]) +  " | Max = " + str(max(list(df["temp"]))) +  " | Min = " + str(min(list(df["temp"]))) +  "  \n"
+                temp = "// Temperature = " + str(df.loc[i, "avg_temp"]) + " | i = " + str(df.loc[i, "avg_tempi"]) +  " | Max = " + str(max(list(df["avg_temp"]))) +  " | Min = " + str(min(list(df["avg_temp"]))) +  "  \n"
                 dst.append(temp)
 
                 temp = "// Precipitation = " + str(df.loc[i, "precip"]) + " | i = " + str(df.loc[i, "precipi"]) +  " | Max = " + str(max(list(df["precip"]))) +  " | Min = " + str(min(list(df["precip"]))) +  "  \n"
@@ -160,6 +160,8 @@ def coregister_data():
     
     counter = []
     week_counters = []
+    avg_temps = []
+    avg_precips = []
 
     for i in range(len(list(df["time"]))): 
 
@@ -168,16 +170,38 @@ def coregister_data():
         week_counter = i%7 
         week_counters.append(week_counter)
 
+        if week_counter == 0: 
+            temp_short_list = list(df["temp"])[i:i+7]
+            avg_temp = sum(temp_short_list)/len(temp_short_list)
+
+            precip_short_list = list(df["precip"])[i:i+7]
+            avg_precip = sum(precip_short_list)/len(precip_short_list)
+            
+            #print("len precip short list = ")
+            #print(len(temp_short_list))
+
+            avg_temps.append(avg_temp)
+            avg_precips.append(avg_precip)
+        
+        else: 
+            avg_temps.append(0)
+            avg_precips.append(0)
+
 
         
     df["index"] = counter
     df["week_counter"] = week_counters
+    df["avg_precip"] = avg_precips
+    df["avg_temp"] = avg_temps
 
     df = df[(df['week_counter'] == 0)]
     df = df[(df['index'] < 364)]
 
+
     df["tempi"] = index_df(list(df["tempi"]))
     df["precipi"] = index_df(list(df["precipi"]))
+    df["avg_tempi"] = index_df(list(df["avg_temp"]))
+    df["avg_precipi"] = index_df(list(df["avg_precip"]))
 
     angles = []
     for i in range(len(list(df["index"]))): 

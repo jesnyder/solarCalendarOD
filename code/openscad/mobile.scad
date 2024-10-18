@@ -117,19 +117,23 @@ module web(x, y, z, noon, day, month, precip, temp){
 module ring(x, y, z, noon, day, month, precip, temp){
     
     
-    for (i = [0 : .2 : 0]) {
+    for (i = [0.1 : .1 : .4]) {
         
-        translate([x - 6*y , 0 , z-4*y ])
+        rr = x/2+day*1/temp*1.1;
+        xx = 15*y*i;
+        yy = sqrt(rr*rr - xx*xx);
+        
+        translate([x - xx  , 0 , 1*z*.65+yy ])
         rotate([90,0,0])
-        cylinder(h = z*day, r1 = y*2/3, r2 = y*2/3, center = true, $fn=200);
+        cylinder(h = z*day, r1 = y/2, r2 = y/2, center = true, $fn=200);
     } 
     
     }
 
 
 x = 60; y = 5; z = x*2-1/4*x;
-noon = 0.5; day = .8; month = 12;
-precip = 1; temp = 1.0;
+noon = 0.5; day = .6; month = 12;
+precip = 1; temp = 1;
     
 //arc(x, y, z, precip);
 //cutout(x, y, z, temp);

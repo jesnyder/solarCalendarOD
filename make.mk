@@ -2,9 +2,10 @@ DEFAULT_GOAL:  pythonanalysis
 
 # install requirements
 # chmod +x filename 
+# pip install --upgrade -r reqs.txt
 .PHONY: getreqs
 getreqs:
-	pip install --upgrade -r reqs.txt
+	
 
 
 # analyze the dataset
