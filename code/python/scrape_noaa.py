@@ -20,23 +20,30 @@ def scrape_noaa():
 
     if 0 in tasks: query_noaa()
     if 1 in tasks: query_meterostat()
-    if 2 in tasks: coregister_data()
-    if 3 in tasks: write_openscad()
+
+
+    location_names = ["SF", "OD"] 
+    for location_name in location_names: 
+        if 2 in tasks: coregister_data(location_name)
+        if 3 in tasks: write_openscad(location_name)
 
     print("completed scrape_noaa")
 
 
 
-def write_openscad():
+def write_openscad(location_name):
     """
     
     """
 
-    df = pd.read_csv("ref.csv")
+    src_filename = "refs_" + location_name + ".csv"
+    df = pd.read_csv(src_filename)
 
     src_fil = os.path.join("code", "openscad", "mobile.scad")
     src_fil = os.path.join("mobile.scad")
 
+    dst_fil = "mobile_" + location_name + ".scad"
+ 
     f = open(src_fil, "r")
     lines = f.readlines()
     f.close()
@@ -87,7 +94,7 @@ def write_openscad():
         
 
 
-    dst_fil = os.path.join("mobile.scad")
+    dst_fil = os.path.join(dst_fil)
     f = open(dst_fil, "w")
     for line in dst: 
         f.write(line)
@@ -95,18 +102,20 @@ def write_openscad():
 
 
 
-def coregister_data():
+def coregister_data(location_name):
     """
     single dataframe saved as .csv 
     """
 
-    filename = "temp.csv"
-    df_temp = pd.read_csv(filename)
+    temp_filename = location_name + "_temp.csv"
+    #filename = "temp.csv"
+    df_temp = pd.read_csv(temp_filename)
     #df_temp = trim_by_date(df_temp)
     print(df_temp)
     
-    filename = "solarCalendar_OD.csv"
-    df_solar = pd.read_csv(filename)
+    solar_filename = "solarCalendar_" + location_name + ".csv"
+    #filename = "solarCalendar_OD.csv"
+    df_solar = pd.read_csv(solar_filename)
     #df_solar = trim_by_date(df_solar)
     print(df_solar)
 
@@ -212,7 +221,8 @@ def coregister_data():
     df["angles"] = angles
 
 
-    df.to_csv("ref.csv")
+    dst_filename = "refs_" + location_name + ".csv"
+    df.to_csv(dst_filename)
 
 
     
@@ -319,7 +329,8 @@ def query_noaa():
     counties = {
         'NY': {'lat': 40.72, 'lon': -74.02},
         'LA': {'lat': 37.77, 'lon': -122.42},
-        'OD': {'lat': 41.414059, 'lon': -73.303711}
+        'OD': {'lat': 41.414059, 'lon': -73.303711},
+        'SF': {'lat': 37.77557277844762, 'lon': -122.46884808939886} 
     }
 
     url = 'https://gml.noaa.gov/grad/solcalc/table.php'
@@ -411,7 +422,12 @@ def query_meterostat():
     end = datetime(2024, 10, 1)
 
     # Create Point for Newtown, Connecticut
+    location_name = "OD"
     location = Point(41.414059, -73.303711, 70)
+
+    # San Francisco 
+    #location_name = "SF"
+    #location = Point(37.77557277844762, -122.46884808939886) 
 
     # Get daily data for 2018
     data = Daily(location, start, end)
@@ -422,9 +438,10 @@ def query_meterostat():
     #plt.show()
 
     print(data)
-    data.to_csv('temp.csv')
+    dst_filename = location_name + "_temp.csv"
+    data.to_csv(dst_filename)
 
-    data = pd.read_csv('temp.csv')
+    data = pd.read_csv(dst_filename)
     print(data)
 
     data["Year"] = [0]*len(list(data["time"]))
@@ -439,7 +456,7 @@ def query_meterostat():
         data.loc[i, "Day"] = str(date.split("-")[2])
 
     
-    data.to_csv('temp.csv')
+    data.to_csv(dst_filename)
 
 
 

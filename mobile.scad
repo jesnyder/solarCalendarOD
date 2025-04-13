@@ -1,22 +1,27 @@
-
 module holes(x, y, z, month){
     
     
-    hole_radius = x/18/4;
+    hole_radius = x/13/4;
     if (hole_radius > x/18/4) { hole_radius = x/14;};
     if (hole_radius < 2){ hole_radius = 2; };
     
     for ( i = [1 : 1 : month]) {
-        translate([x - (i-1)*4*hole_radius , 0 , 4*hole_radius])
-        rotate([90,0,0])
-        cylinder(h = z*day, r1 = hole_radius, r2 = hole_radius, center = true, $fn=100);
         
-        translate([x - (i-1)*4*hole_radius , 0 , 0])
-        rotate([90,0,0])
-        cylinder(h = z*day, r1 = hole_radius, r2 = hole_radius, center = true, $fn=100);
+        //translate([x - (i-1)*4*hole_radius , 0 , 4*hole_radius])
+        //rotate([90,0,0])
+        //cylinder(h = z*day, r1 = hole_radius, r2 = hole_radius, center = true, $fn=100);
+        
+        //translate([x - (i-1)*4*hole_radius , 0 , 0])
+        //rotate([90,0,0])
+        //cylinder(h = z*day, r1 = hole_radius, r2 = hole_radius, center = true, $fn=100);
+        
+        translate([x - (i-1)*4*hole_radius -2*hole_radius, -hole_radius*3, i*hole_radius*1.5+2*hole_radius])
+        rotate([0, 90, 90])
+        panel(x, 2*hole_radius, hole_radius*10);
+        
         }
         
-    translate([x - 2*hole_radius , 0 , 8*hole_radius])
+    translate([x - 2*hole_radius - 3*hole_radius , 0 , 8*hole_radius])
     rotate([90,0,0])
     cylinder(h = z*day, r1 = hole_radius, r2 = hole_radius, center = true, $fn=100);
         
@@ -41,7 +46,9 @@ module panel(x, y, z){
     
 module arc(x, y, z, temp){
     
-    radius = 2*(x) - temp * (x);
+    temp_adjusted = temp*0.95;
+    
+    radius = 2*(x) - temp_adjusted * (x);
     
     y = 2*y;
     
@@ -56,7 +63,7 @@ module arc(x, y, z, temp){
         
         translate([x , z/2 , z-radius])
         rotate([90,0,0])
-        cylinder(h = z, r1 = radius, r2 = radius, center = false, $fn=100);
+        cylinder(h = z, r1 = radius, r2 = radius, center = false, $fn=500);
         
         //translate([x , 0 , z/2])
         //panel(x, 2*y, z/2);
@@ -74,7 +81,7 @@ module cutout(x, y, z, temp){
     
     
     yy = y/3;
-    xx = x*1/2*sqrt(temp) + 2*yy;
+    xx = x*1/2*temp + 2*yy;
     translate([x - xx  , yy , 0 ])
     rotate([0,0,0])
     panel(xx, yy, z);
@@ -117,9 +124,9 @@ module web(x, y, z, noon, day, month, precip, temp){
 module ring(x, y, z, noon, day, month, precip, temp){
     
     
-    for (i = [0.1 : .1 : .4]) {
+    for (i = [0.1 : .1 : .3]) {
         
-        rr = x/2+day*1/temp*1.1;
+        rr = x/2+day*1/temp*5;
         xx = 15*y*i;
         yy = sqrt(rr*rr - xx*xx);
         
@@ -131,9 +138,9 @@ module ring(x, y, z, noon, day, month, precip, temp){
     }
 
 
-x = 60; y = 5; z = x*2-1/4*x;
-noon = 0.5; day = .8; month = 12;
-precip = 1; temp = 1.0;
+x = 60; y = 5; z = x*2;
+noon = 0.5; day = .75; month = 12;
+precip = 1; temp = 1;
     
 //arc(x, y, z, precip);
 //cutout(x, y, z, temp);
@@ -143,7 +150,7 @@ torus_radius = x*1.43/2;
 
 rotate_extrude(convexity = 100)
 translate([torus_radius, z/3, 5])
-circle(r = 10, $fn = 100);
+circle(r = 8, $fn = 100);
 
 
 //j = 52;
@@ -292,11 +299,11 @@ web(x, y, z, 0.5007 , 0.3951 , 1 ,  0.0863 , 0.0 );
 
 
 // 2024-01-21 
-// Temperature = 2.4285714285714284 | i = 0.2085 | Max = 27.042857142857144 | Min = -4.057142857142857  
+// Temperature = 2.414285714285714 | i = 0.2081 | Max = 27.042857142857144 | Min = -4.057142857142857  
 // Precipitation = 0.0 | i = 0.0 | Max = 32.7 | Min = 0.0  
 // Noon , Day , Month , Precip , Temp 
 rotate([0 , 0 , 110.7692])
-web(x, y, z, 0.5028 , 0.4035 , 1 ,  0.2552 , 0.2085 ); 
+web(x, y, z, 0.5028 , 0.4035 , 1 ,  0.2552 , 0.2081 ); 
 
 
 // 2024-01-28 
@@ -548,27 +555,27 @@ web(x, y, z, 0.5382 , 0.5583 , 8 ,  0.0152 , 0.8512 );
 
 
 // 2024-09-01 
-// Temperature = 19.228571428571428 | i = 0.7487 | Max = 27.042857142857144 | Min = -4.057142857142857  
+// Temperature = 19.25714285714286 | i = 0.7497 | Max = 27.042857142857144 | Min = -4.057142857142857  
 // Precipitation = 1.0 | i = 0.0306 | Max = 32.7 | Min = 0.0  
 // Noon , Day , Month , Precip , Temp 
 rotate([0 , 0 , 332.3077])
-web(x, y, z, 0.5368 , 0.5451 , 9 ,  0.0731 , 0.7487 ); 
+web(x, y, z, 0.5368 , 0.5451 , 9 ,  0.0731 , 0.7497 ); 
 
 
 // 2024-09-08 
-// Temperature = 17.585714285714285 | i = 0.6959 | Max = 27.042857142857144 | Min = -4.057142857142857  
+// Temperature = 17.6 | i = 0.6964 | Max = 27.042857142857144 | Min = -4.057142857142857  
 // Precipitation = 0.0 | i = 0.0 | Max = 32.7 | Min = 0.0  
 // Noon , Day , Month , Precip , Temp 
 rotate([0 , 0 , 339.2308])
-web(x, y, z, 0.5347 , 0.5326 , 9 ,  0.0066 , 0.6959 ); 
+web(x, y, z, 0.5347 , 0.5326 , 9 ,  0.0066 , 0.6964 ); 
 
 
 // 2024-09-15 
-// Temperature = 19.571428571428573 | i = 0.7598 | Max = 27.042857142857144 | Min = -4.057142857142857  
+// Temperature = 19.557142857142857 | i = 0.7593 | Max = 27.042857142857144 | Min = -4.057142857142857  
 // Precipitation = 0.0 | i = 0.0 | Max = 32.7 | Min = 0.0  
 // Noon , Day , Month , Precip , Temp 
 rotate([0 , 0 , 346.1538])
-web(x, y, z, 0.5333 , 0.5194 , 9 ,  0.0066 , 0.7598 ); 
+web(x, y, z, 0.5333 , 0.5194 , 9 ,  0.0066 , 0.7593 ); 
 
 
 // 2024-09-22 

@@ -2,21 +2,27 @@
 module holes(x, y, z, month){
     
     
-    hole_radius = x/18/4;
+    hole_radius = x/13/4;
     if (hole_radius > x/18/4) { hole_radius = x/14;};
     if (hole_radius < 2){ hole_radius = 2; };
     
     for ( i = [1 : 1 : month]) {
-        translate([x - (i-1)*4*hole_radius , 0 , 4*hole_radius])
-        rotate([90,0,0])
-        cylinder(h = z*day, r1 = hole_radius, r2 = hole_radius, center = true, $fn=100);
         
-        translate([x - (i-1)*4*hole_radius , 0 , 0])
-        rotate([90,0,0])
-        cylinder(h = z*day, r1 = hole_radius, r2 = hole_radius, center = true, $fn=100);
+        //translate([x - (i-1)*4*hole_radius , 0 , 4*hole_radius])
+        //rotate([90,0,0])
+        //cylinder(h = z*day, r1 = hole_radius, r2 = hole_radius, center = true, $fn=100);
+        
+        //translate([x - (i-1)*4*hole_radius , 0 , 0])
+        //rotate([90,0,0])
+        //cylinder(h = z*day, r1 = hole_radius, r2 = hole_radius, center = true, $fn=100);
+        
+        translate([x - (i-1)*4*hole_radius -2*hole_radius, -hole_radius*3, i*hole_radius*1.5+2*hole_radius])
+        rotate([0, 90, 90])
+        panel(x, 2*hole_radius, hole_radius*10);
+        
         }
         
-    translate([x - 2*hole_radius , 0 , 8*hole_radius])
+    translate([x - 2*hole_radius - 3*hole_radius , 0 , 8*hole_radius])
     rotate([90,0,0])
     cylinder(h = z*day, r1 = hole_radius, r2 = hole_radius, center = true, $fn=100);
         
@@ -41,7 +47,9 @@ module panel(x, y, z){
     
 module arc(x, y, z, temp){
     
-    radius = 2*(x) - temp * (x);
+    temp_adjusted = temp*0.95;
+    
+    radius = 2*(x) - temp_adjusted * (x);
     
     y = 2*y;
     
@@ -56,7 +64,7 @@ module arc(x, y, z, temp){
         
         translate([x , z/2 , z-radius])
         rotate([90,0,0])
-        cylinder(h = z, r1 = radius, r2 = radius, center = false, $fn=100);
+        cylinder(h = z, r1 = radius, r2 = radius, center = false, $fn=500);
         
         //translate([x , 0 , z/2])
         //panel(x, 2*y, z/2);
@@ -91,7 +99,7 @@ module web(x, y, z, noon, day, month, precip, temp){
     rotate([0,0,0])
     
     
-    difference () {
+    union() {
         
         color([0 , 0 , 1 , 0.75]) 
         panel(x, y, z);
@@ -117,9 +125,9 @@ module web(x, y, z, noon, day, month, precip, temp){
 module ring(x, y, z, noon, day, month, precip, temp){
     
     
-    for (i = [0.1 : .1 : .4]) {
+    for (i = [0.1 : .1 : .3]) {
         
-        rr = x/2+day*1/temp*1.1;
+        rr = x/2+day*1/temp*5;
         xx = 15*y*i;
         yy = sqrt(rr*rr - xx*xx);
         
@@ -131,8 +139,8 @@ module ring(x, y, z, noon, day, month, precip, temp){
     }
 
 
-x = 60; y = 5; z = x*2-1/4*x;
-noon = 0.5; day = .6; month = 12;
+x = 60; y = 5; z = x*2;
+noon = 0.5; day = .75; month = 12;
 precip = 1; temp = 1;
     
 //arc(x, y, z, precip);
@@ -143,7 +151,7 @@ torus_radius = x*1.43/2;
 
 rotate_extrude(convexity = 100)
 translate([torus_radius, z/3, 5])
-circle(r = 10, $fn = 100);
+circle(r = 8, $fn = 100);
 
 
 j = 52;
