@@ -36,8 +36,10 @@
 
 <h2>Building the calendar</h2>
 <ol>
-  <li> <b>List sunrise, sunset, and solar noon times.</b> Use Python script and the 3rd party library "requests" to scrape the <a href="https://gml.noaa.gov/grad/solcalc/">National Oceanic and Atmospheric Administration></a> for sunrise, sunset, and solar noon times for each day in 2024. 
-  <li>
+  <li><b>List sunrise, sunset, and solar noon times.</b> Use Python script and the 3rd party library "requests" to scrape the <a href="https://gml.noaa.gov/grad/solcalc/">National Oceanic and Atmospheric Administration></a> for sunrise, sunset, and solar noon times for each day in 2024. 
+  <li><b>List weather data.</b> Use <a href="https://dev.meteostat.net/python/">Meteostat</a>, the open-source Python library that provides easy access to historical weather and climate data.  
+  <li><b>Coregister the solar and weather data using timestamps.</b> Save coregistered data as a json file. Summarize the data as 52 weeks from January through December of 2024.
+  <li><b>Prepare CAD model.</b> Use <a href="https://openscad.org/">OpenSCAD></a>, a programmer's solid 3D CAD modeller, to create blocks. The dimensions of which will be determined by the solar behavior and meterological readings scraped in the earlier steps. 
 </ol>
 
 
